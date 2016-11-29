@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
+		"sourceMap": true,
+		"noImplicitAny": true,
+		"outDir": "dist"
+	},
+	"files": [
+		"custom-typings/index.d.ts",
+		"src/index.ts"
+	]
+}
