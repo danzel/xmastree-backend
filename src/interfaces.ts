@@ -68,3 +68,25 @@ export class JustDate {
 		return JustDate.create(now.getFullYear(), now.getMonth(), now.getDate());
 	}
 }
+
+export interface ConfigFile {
+
+	httpPort: number;
+
+	documentDbSslWorkaround: boolean;
+	documentDbHost: string;
+	documentDbAuthMasterKey: string;
+	documentDbDatabase: string;
+	documentDbCollection: string;
+
+	sessionSecret: string;
+
+	facebookClientID: string;
+	facebookClientSecret: string;
+
+	googleClientID: string;
+	googleClientSecret: string;
+
+	twitterConsumerKey: string;
+	twitterConsumerSecret: string;
+}

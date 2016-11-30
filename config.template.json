@@ -1,0 +1,20 @@
+{
+	"httpPort": 3000,
+
+	"documentDbSslWorkaround": false,
+	"documentDbHost": "todo",
+	"documentDbAuthMasterKey": "todo",
+	"documentDbDatabase": "xdb",
+	"documentDbCollection": "xcol",
+
+	"sessionSecret": "todo",
+
+	"facebookClientID": "todo",
+	"facebookClientSecret": "todo",
+
+	"googleClientID": "todo",
+	"googleClientSecret": "todo",
+
+	"twitterConsumerKey": "todo",
+	"twitterConsumerSecret": "todo"
+}

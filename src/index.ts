@@ -1,48 +1,78 @@
+import bodyParser = require('body-parser');
+import cors = require('cors');
+import documentdb = require('documentdb');
 import express = require('express');
+import fs = require('fs');
 import session = require('express-session');
 import DocumentDBSession = require('documentdb-session');
 
-import {HttpServer} from './httpServer';
+import { initializeDb, Db } from './dbInitializer';
+import { HttpServer } from './httpServer';
+import { DecorationsController, StatusController } from './controllers'
+import { DecorationRepository, UserRepository } from './repositories'
+import { ConfigFile } from './interfaces'
 
 const DocumentDBStore = DocumentDBSession(session);
 
-//TODO: Only for dev
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
+
+let db: Db
 function addExpressMiddleware(app: express.Express) {
-	//todo
-	app.get('/test', (req, res) => {
-		res.json({
-			something: 'lolol',
-			abcezas: 123
-		});
-		res.end();
-	});
 
-	app.get('/cookietest', (req, res) => {
+	app.use(cors());
+	/*app.use(cors({
+		origin: [
+			'https://xmastree.io',
+			'https://www.xmastree.io'
+		]
+	}));*/
+
+	app.use(bodyParser.json());
+
+	let userRepository = new UserRepository(db.client, db.database, db.collection);
+	let decorationRepository = new DecorationRepository(db.client, db.database, db.collection);
+
+	new StatusController(app, userRepository);
+	new DecorationsController(app, userRepository, decorationRepository);
+	/*app.get('/cookietest', (req, res) => {
 		res.json(req.session);
 		res.end();
-	})
+	})*/
+
 }
 
-let server = new HttpServer({
-	httpPort: 3000,
+let config = <ConfigFile>JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
-	addExpressMiddleware,
+if (config.documentDbSslWorkaround) {
+	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
 
-	sessionSecret: 'wkersfhkdxfhi8yw4thuawehjedyiertskhawrkhuawet',
-	sessionStore: new DocumentDBStore({
-		host: 'https://localhost:8081/',
-		key: 'C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==',
-		ttl: 7 * 24 * 60 * 60
-	}),
+console.log('Initializing Db');
+initializeDb(config.documentDbHost, { masterKey: config.documentDbAuthMasterKey }, config.documentDbDatabase, config.documentDbCollection).then(gotDb => {
+	db = gotDb;
 
-	facebookClientID: 'todo',
-	facebookClientSecret: 'todo',
+	console.log('Starting HttpServer');
+	let server = new HttpServer({
+		httpPort: config.httpPort,
 
-	googleClientID: 'todo',
-	googleClientSecret: 'todo',
+		addExpressMiddleware,
 
-	twitterConsumerKey: 'todo',
-	twitterConsumerSecret: 'todo'
+		sessionSecret: 'wkersfhkdxfhi8yw4thuawehjedyiertskhawrkhuawet',
+		sessionStore: new DocumentDBStore({
+			host: config.documentDbHost,
+			key: config.documentDbAuthMasterKey,
+			database: config.documentDbDatabase,
+			collection: config.documentDbCollection,
+			ttl: 7 * 24 * 60 * 60
+		}),
+
+		facebookClientID: config.facebookClientID,
+		facebookClientSecret: config.facebookClientSecret,
+
+		googleClientID: config.googleClientID,
+		googleClientSecret: config.googleClientSecret,
+
+		twitterConsumerKey: config.twitterConsumerKey,
+		twitterConsumerSecret: config.twitterConsumerSecret
+	});
 });
