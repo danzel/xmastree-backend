@@ -19,13 +19,14 @@ const DocumentDBStore = DocumentDBSession(session);
 let db: Db
 function addExpressMiddleware(app: express.Express) {
 
-	app.use(cors());
-	/*app.use(cors({
+	app.use(cors({
 		origin: [
+			'http://localhost:8080',
 			'https://xmastree.io',
 			'https://www.xmastree.io'
-		]
-	}));*/
+		],
+		credentials: true
+	}));
 
 	app.use(bodyParser.json());
 

@@ -39,6 +39,18 @@ export class DecorationsController {
 				let y = parseFloat(req.body.y);
 				let dateNumber = parseInt(req.body.date);
 
+				//Bad values
+				if (isNaN(x) || isNaN(y) || isNaN(dateNumber)) {
+					res.statusCode = 500;
+					res.end();
+				}
+				//Out of range
+				const maxRange = [[150, 220], [1000, 780]];
+				if (x < maxRange[0][1] || x > maxRange[1][1] || y < maxRange[0][0] || y > maxRange[1][0]) {
+					res.statusCode = 500;
+					res.end();
+				}
+
 				let when = new JustDate(dateNumber);
 				let now = JustDate.now();
 				if (!userRepository.userCanPlaceDecoration(userModel, when, now)) {
