@@ -9,6 +9,8 @@ import passportFacebook = require('passport-facebook');
 import passportGoogle = require('passport-google-oauth');
 import passportTwitter = require('passport-twitter');
 
+import {PassportUser} from './interfaces';
+
 interface HttpServerConfig {
 	httpPort: number;
 
@@ -25,11 +27,6 @@ interface HttpServerConfig {
 
 	facebookClientID: string;
 	facebookClientSecret: string;
-}
-
-interface PassportUser {
-	provider: string;
-	providerId: string;
 }
 
 export class HttpServer {
