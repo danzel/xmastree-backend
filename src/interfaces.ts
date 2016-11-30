@@ -13,7 +13,7 @@ export interface UserModel {
 
 	userUuid: string;
 
-	/** In format l.getFullYear() * 10000 + (l.getMonth() + 1) * 100 + l.getDate() */
+	/** In JustDate format */
 	dateLastPlaced?: number;
 
 	nextDecoration: number;
@@ -30,12 +30,16 @@ export interface DecorationModel {
 	x: number;
 	y: number;
 
+	/** In JustDate format */
+	placementDate: number;
+	/** server time as new Date().getTime() */
 	placementTime: number;
 
 	userUuid: string;
 }
 
 export class JustDate {
+	/** value is in format l.getFullYear() * 10000 + (l.getMonth() + 1) * 100 + l.getDate() */
 	constructor(public value: number) {
 	}
 
