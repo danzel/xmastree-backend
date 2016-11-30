@@ -72,6 +72,8 @@ export class JustDate {
 export interface ConfigFile {
 
 	httpPort: number;
+	postAuthRedirectUrl: string;
+	allowedOrigins: string[];
 
 	documentDbSslWorkaround: boolean;
 	documentDbHost: string;

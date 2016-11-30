@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "author": "Dave Leaver <danzel@localhost.geek.nz>",
+  "engines":{"node": "6.x.x"},
   "dependencies": {
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",

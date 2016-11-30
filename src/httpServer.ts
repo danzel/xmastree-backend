@@ -14,6 +14,8 @@ import {PassportUser} from './interfaces';
 interface HttpServerConfig {
 	httpPort: number;
 
+	postAuthRedirectUrl: string;
+
 	addExpressMiddleware: (express: express.Express) => void;
 
 	sessionSecret: string;
@@ -113,8 +115,8 @@ export class HttpServer {
 	private createAuthCallback(url: string, provider: string): void {
 		this.app.get(url,
 			passport.authenticate(provider, {
-				successRedirect: '/#success',
-				failureRedirect: '/#failure'
+				successRedirect: this.config.postAuthRedirectUrl + '/#success',
+				failureRedirect: this.config.postAuthRedirectUrl + '/#failure'
 			}));
 		/*this.app.get(url, (req, res, next) => {
 			passport.authenticate(provider, (err: Error, user: PassportUser, info: any, status: number) => {

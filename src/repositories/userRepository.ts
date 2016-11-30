@@ -3,6 +3,8 @@ import uuid = require('node-uuid');
 
 import { JustDate, UserModel } from '../interfaces';
 
+const totalDecorations = 38; //valid index 0-{thisnumber} exclusive max
+
 export class UserRepository {
 	constructor(private client: documentdb.DocumentClient, private database: documentdb.DatabaseMeta, private collection: documentdb.CollectionMeta) {
 	}
@@ -28,7 +30,7 @@ export class UserRepository {
 								amountPlaced: 0,
 								dateLastPlaced: null,
 								id,
-								nextDecoration: 1, //TODO
+								nextDecoration: Math.floor(totalDecorations * Math.random()),
 								provider,
 								providerId,
 								type: 'user',
@@ -54,7 +56,13 @@ export class UserRepository {
 
 			user.amountPlaced++;
 			user.dateLastPlaced = when.value;
-			user.nextDecoration++; //TODO: nextDecoration
+
+			//New one but not the same as current
+			let nextDecoration = Math.floor((totalDecorations - 1) * Math.random());
+			if (nextDecoration >= user.nextDecoration) {
+				nextDecoration++;
+			}
+			user.nextDecoration = nextDecoration;
 
 			this.client.replaceDocument(docLink, user, {}, (err, res) => {
 				if (err) {

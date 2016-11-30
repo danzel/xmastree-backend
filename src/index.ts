@@ -20,11 +20,7 @@ let db: Db
 function addExpressMiddleware(app: express.Express) {
 
 	app.use(cors({
-		origin: [
-			'http://localhost:8080',
-			'https://xmastree.io',
-			'https://www.xmastree.io'
-		],
+		origin: config.allowedOrigins,
 		credentials: true
 	}));
 
@@ -42,6 +38,7 @@ function addExpressMiddleware(app: express.Express) {
 
 }
 
+console.log('loading config');
 let config = <ConfigFile>JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 if (config.documentDbSslWorkaround) {
@@ -54,11 +51,12 @@ initializeDb(config.documentDbHost, { masterKey: config.documentDbAuthMasterKey 
 
 	console.log('Starting HttpServer');
 	let server = new HttpServer({
-		httpPort: config.httpPort,
+		httpPort: process.env.port || config.httpPort,
+		postAuthRedirectUrl: config.postAuthRedirectUrl,
 
 		addExpressMiddleware,
 
-		sessionSecret: 'wkersfhkdxfhi8yw4thuawehjedyiertskhawrkhuawet',
+		sessionSecret: config.sessionSecret,
 		sessionStore: new DocumentDBStore({
 			host: config.documentDbHost,
 			key: config.documentDbAuthMasterKey,
