@@ -44,7 +44,6 @@ export class HttpServer {
 	}
 
 	private startHttpServer() {
-		console.log('starting http');
 		this.httpServer = http.createServer(this.app);
 		this.httpServer.listen(this.config.httpPort);
 	}
@@ -63,12 +62,10 @@ export class HttpServer {
 		this.app.use(passport.session());
 
 		passport.serializeUser(function (user, done) {
-			console.log('serializeUser');
 			done(null, user.provider + "|" + user.providerId);
 		});
 
 		passport.deserializeUser(function (id: string, done: (error: any, user: any) => void) {
-			console.log('deserializeUser');
 			let split = id.indexOf('|');
 			done(null, { provider: id.substr(0, split), providerId: id.substr(split + 1) });
 		});

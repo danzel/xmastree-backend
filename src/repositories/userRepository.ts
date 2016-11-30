@@ -55,7 +55,7 @@ export class UserRepository {
 			user.amountPlaced++;
 			user.dateLastPlaced = when.value;
 			user.nextDecoration++; //TODO: nextDecoration
-			
+
 			this.client.replaceDocument(docLink, user, {}, (err, res) => {
 				if (err) {
 					reject(err);
@@ -64,5 +64,42 @@ export class UserRepository {
 				}
 			})
 		})
+	}
+
+	userCanPlaceDecoration(user: UserModel, when: JustDate, now: JustDate): boolean {
+
+		//Check when vs now
+		const dayInMilliseconds = 24 * 60 * 60 * 1000;
+		let whenDate = when.asDate();
+		let nowDate = now.asDate();
+
+		//Too far in the future
+		if (whenDate.getTime() > nowDate.getTime() + dayInMilliseconds) {
+			return false;
+		}
+		//Too far in the past
+		if (whenDate.getTime() < nowDate.getTime() - dayInMilliseconds) {
+			return false;
+		}
+
+		//Before time starts
+		if (whenDate.getTime() < new Date(2016, 10, 30).getTime()) {
+			return false;
+		}
+		//After xmas
+		if (whenDate.getTime() > new Date(2016, 11, 25).getTime()) {
+			return false;
+		}
+
+		//Check when vs lastPlaced
+		if (user.dateLastPlaced) {
+			let userLastPlacedDate = new JustDate(user.dateLastPlaced);
+
+			if (when.asDate().getTime() <= userLastPlacedDate.asDate().getTime()) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

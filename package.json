@@ -5,6 +5,8 @@
   "main": "dist/index.js",
   "author": "Dave Leaver <danzel@localhost.geek.nz>",
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
     "documentdb": "^1.10.0",
     "documentdb-session": "^1.0.1",
     "express": "^4.14.0",
@@ -16,6 +18,8 @@
     "passport-twitter": "^1.0.4"
   },
   "devDependencies": {
+    "@types/body-parser": "0.0.33",
+    "@types/cors": "0.0.33",
     "@types/documentdb": "0.0.33",
     "@types/express": "^4.0.34",
     "@types/express-session": "0.0.32",
