@@ -14,6 +14,7 @@ import {PassportUser} from './interfaces';
 interface HttpServerConfig {
 	httpPort: number;
 
+	authRedirectRoot: string;
 	postAuthRedirectUrl: string;
 
 	addExpressMiddleware: (express: express.Express) => void;
@@ -76,7 +77,7 @@ export class HttpServer {
 		passport.use(new passportTwitter.Strategy({
 			consumerKey: this.config.twitterConsumerKey,
 			consumerSecret: this.config.twitterConsumerSecret,
-			callbackURL: '/auth/twitter/callback'
+			callbackURL: this.config.authRedirectRoot + '/auth/twitter/callback'
 		}, (token: string, tokenSecret: string, profile: passport.Profile, done: (error: any, user?: any) => void) => {
 			done(null, { provider: profile.provider, providerId: profile.id });
 		}));
@@ -87,7 +88,7 @@ export class HttpServer {
 		passport.use(new passportGoogle.OAuth2Strategy({
 			clientID: this.config.googleClientID,
 			clientSecret: this.config.googleClientSecret,
-			callbackURL: '/auth/google/callback'
+			callbackURL: this.config.authRedirectRoot + '/auth/google/callback'
 		}, (token: string, tokenSecret: string, profile: passport.Profile, done: (error: any, user?: any) => void) => {
 			done(null, { provider: profile.provider, providerId: profile.id });
 		}));
@@ -98,7 +99,7 @@ export class HttpServer {
 		passport.use(new passportFacebook.Strategy({
 			clientID: this.config.facebookClientID,
 			clientSecret: this.config.facebookClientSecret,
-			callbackURL: '/auth/facebook/callback'
+			callbackURL: this.config.authRedirectRoot + '/auth/facebook/callback'
 		}, (token: string, tokenSecret: string, profile: passport.Profile, done: (error: any, user?: any) => void) => {
 			done(null, { provider: profile.provider, providerId: profile.id });
 		}));

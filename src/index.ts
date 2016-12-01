@@ -52,6 +52,7 @@ initializeDb(config.documentDbHost, { masterKey: config.documentDbAuthMasterKey 
 	console.log('Starting HttpServer');
 	let server = new HttpServer({
 		httpPort: process.env.port || config.httpPort,
+		authRedirectRoot: config.authRedirectRoot,
 		postAuthRedirectUrl: config.postAuthRedirectUrl,
 
 		addExpressMiddleware,
