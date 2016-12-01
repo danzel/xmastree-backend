@@ -107,7 +107,7 @@ export class HttpServer {
 
 		this.app.get('/logout', (req, res) => {
 			req.logout();
-			res.redirect('/');
+			res.redirect(this.config.postAuthRedirectUrl);
 		});
 	}
 
